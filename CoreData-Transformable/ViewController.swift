@@ -46,7 +46,6 @@ class ViewController: UIViewController {
     
     //MARK: Methods
     func loadPerson() {
-
         let personFetchRequest: NSFetchRequest<Person> = Person.fetchRequest()
         do {
             let results = try coreDataStack.mainContext.fetch(personFetchRequest)
@@ -106,22 +105,12 @@ private extension ViewController {
             button.layer.borderColor = UIColor.clear.cgColor
             button.addTarget(self, action: #selector(colorButtonTapped(sender:)), for: .touchUpInside)
         }
-        guard let colors = person?.colors else {
-            //if person has no colors
-            redButton.backgroundColor = .red
-            orangeButton.backgroundColor = .orange
-            yellowButton.backgroundColor = .yellow
-            greenButton.backgroundColor = .green
-            blueButton.backgroundColor = .blue
-            purpleButton.backgroundColor = .purple
-            return
+        if person!.colors.count == 0 {
+            view.backgroundColor = .white
+            person!.colors = [.red, .orange, .yellow, .green, .blue, .purple]
         }
         for (index, button) in buttons.enumerated() {
-            if index >= colors.count { //if we do not have enough colors stored in CoreData...
-                button.backgroundColor = .black
-            } else { //make the button's color equal to the colors stored
-                button.backgroundColor = colors[index]
-            }
+            button.backgroundColor = person!.colors[index]
             if let favColor = person?.favoriteColor, favColor == button.backgroundColor! {
                 button.layer.borderColor = UIColor.white.cgColor
                 favoriteColor = favColor
